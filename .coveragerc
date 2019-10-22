@@ -1,0 +1,3 @@
+[run]
+source = niyantra_rest_api
+omit = niyantra_rest_api/test*
