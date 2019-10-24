@@ -7,8 +7,12 @@ import zope.sqlalchemy
 # Base.metadata prior to any initialization routines
 from .login_user import LoginUser  # flake8: noqa
 from .role import Role
-from .attendee import Attendee
+from .student import Student
 from .attendance import Attendance, AttendanceStatus
+from .attendance_sheet import AttendanceSheet
+from .section import Section
+from .section_session import SectionSession
+from .trackable_base import Trackable
 
 # run configure_mappers after defining all of the models to ensure
 # all relationships can be setup

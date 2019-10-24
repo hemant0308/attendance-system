@@ -3,28 +3,40 @@ from datetime import datetime
 from sqlalchemy.orm.exc import NoResultFound
 
 from niyantra_rest_api.services import BaseService
-from niyantra_rest_api.models import Attendance,Attendee
+from niyantra_rest_api.models import Attendance,Section,AttendanceSheet,SectionSession,Student
 from niyantra_rest_api.exceptions import ConstraintError
+
+from sqlalchemy.orm import joinedload
+
 
 
 class AttendanceService(BaseService):
     def __init__(self):
-        super(AttendanceService,self).__init__(Attendance)
+        super(AttendanceService,self).__init__(AttendanceSheet)
 
-    def mark_attendance(self, attendance):
-        attendee = self.get(attendance.attendee_id,model_class=Attendee)
-        if attendee is None:
-            raise ConstraintError("No Attendee found with this Id")
+    def all(self):
+        return self.dbsession.query(AttendanceSheet).options((
+            joinedload(AttendanceSheet.section_session)).
+            options(joinedload(AttendanceSheet.attendances).
+            joinedload(Attendance.student))).all()
+
+    def mark_attendance(self,attendance_sheet_id,attendance):
+        attendance_sheet = self.get(attendance_sheet_id)
+        if attendance_sheet is None:
+            raise ConstraintError("No Attendance sheet found with this Id")
+
+        student = self.get(attendance.student_id,model_class=Student)
+        if student is None:
+            raise ConstraintError("No student found with this Id")
+
         try:
             _attendance = self.dbsession.query(Attendance).filter_by(
-                date=attendance.date,attendee=attendee).one()
-            attendance.created_at = datetime.now()
+                student=student, attendance_sheet=attendance_sheet).one()
             attendance.id = _attendance.id
-            attendance.attendee = attendee
-            self.dbsession.merge(attendance)
+            self.update(attendance.id, attendance, model_class=Attendance)
+            return _attendance
         except NoResultFound:
-            attendance.attendee = attendee
-            attendance.created_at = datetime.now()
-            self.dbsession.add(attendance)
-        self.flush()
+            attendance.student = student
+            attendance.attendance_sheet = attendance_sheet
+            self.create(attendance)
         return attendance

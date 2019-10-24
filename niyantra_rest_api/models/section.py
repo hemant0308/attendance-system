@@ -11,8 +11,8 @@ from sqlalchemy.orm import relationship
 
 from .meta import Base
 
-class Attendee(Base):
-    __tablename__ = 'attendee'
+class Section(Base):
+    __tablename__ = 'section'
     id = Column(Integer, primary_key=True)
-    firstname = Column(String,nullable=False)
-    lastname = Column(String)
+    name = Column(String,nullable=False)
+    sessions = relationship('SectionSession', back_populates='section')

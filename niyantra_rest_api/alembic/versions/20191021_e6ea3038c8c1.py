@@ -1,4 +1,4 @@
-"""Create table attendee
+"""Create table student
 
 Revision ID: e6ea3038c8c1
 Revises: 5512a4f42b5f
@@ -17,13 +17,13 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table('attendee',
+    op.create_table('student',
         sa.Column('id',sa.Integer(),nullable=False),
         sa.Column('firstname',sa.String(50),nullable=False),
         sa.Column('lastname',sa.String(50)),
-        sa.PrimaryKeyConstraint('id',name=op.f('attendee_pkey'))
+        sa.PrimaryKeyConstraint('id',name=op.f('student_pkey'))
     )
 
 
 def downgrade():
-    op.drop_table('attendee')
+    op.drop_table('student')

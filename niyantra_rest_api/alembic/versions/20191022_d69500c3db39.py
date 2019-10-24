@@ -19,14 +19,13 @@ depends_on = None
 def upgrade():
     op.create_table('attendance',
         sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('attendee_id', sa.Integer(), nullable=False),
-        sa.Column('date', sa.Date(), nullable=False),
+        sa.Column('student_id', sa.Integer(), nullable=False),
         sa.Column('status', sa.Enum(AttendanceStatus)),
         sa.Column('created_at', sa.DateTime(), nullable=False),
         sa.PrimaryKeyConstraint('id',name=op.f('attendance_pkey'))
     )
-    op.create_foreign_key('attendance_to_attendee_fk','attendance','attendee',['attendee_id'],['id'])
+    op.create_foreign_key('attendance_to_student_fk','attendance','student',['student_id'],['id'])
 
 def downgrade():
-    op.drop_constraint('attendance_to_attendee_fk')
+    op.drop_constraint('attendance_to_student_fk')
     op.drop_table('attendance')

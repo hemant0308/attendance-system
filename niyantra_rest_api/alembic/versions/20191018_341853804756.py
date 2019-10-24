@@ -27,6 +27,6 @@ def upgrade():
     op.create_foreign_key('user_role_to_role_fk','user_role','role',['role_id'],['id'])
 
 def downgrade():
-    op.drop_constraint('user_role_to_user_fk','user_role',_type='foreignkey')
-    op.drop_constraint('user_role_to_role_fk','user_role',_type='foreignkey')
+    op.drop_constraint('user_role_to_user_fk','user_role',type_='foreignkey')
+    op.drop_constraint('user_role_to_role_fk','user_role',type_='foreignkey')
     op.drop_table('user_role')
