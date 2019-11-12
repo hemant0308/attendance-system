@@ -6,6 +6,7 @@ class Permissions:
 
 class Roles:
     Admin='Admin'
+    Teacher = 'Teacher'
 
 EMPTY_STRING = ''
 DEFAULT_PERMISSION = Permissions.authenticated_only

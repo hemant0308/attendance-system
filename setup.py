@@ -59,10 +59,7 @@ setup(
     install_requires=requires,
     entry_points={
         'paste.app_factory': [
-            'main = niyantra_rest_api:main',
-        ],
-        'console_scripts': [
-            'initialize_niyantra_rest_api_db = niyantra_rest_api.scripts.initialize_db:main',
-        ],
+            'main = app:main',
+        ]
     },
 )
