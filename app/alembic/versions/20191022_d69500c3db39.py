@@ -7,7 +7,7 @@ Create Date: 2019-10-22 12:11:39.267479
 """
 from alembic import op
 import sqlalchemy as sa
-from niyantra_rest_api.models import AttendanceStatus
+from app.models import AttendanceStatus
 
 # revision identifiers, used by Alembic.
 revision = 'd69500c3db39'

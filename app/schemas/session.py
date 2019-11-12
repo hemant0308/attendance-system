@@ -2,7 +2,7 @@ from datetime import datetime,date
 from marshmallow import fields,Schema,post_load,validates_schema,ValidationError
 from marshmallow_enum import EnumField
 
-from niyantra_rest_api.models import (
+from app.models import (
     Attendance,
     AttendanceStatus,
     AttendanceSheet,

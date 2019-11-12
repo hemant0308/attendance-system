@@ -4,10 +4,10 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Allow, Authenticated, Everyone, ALL_PERMISSIONS, DENY_ALL,Deny
 from marshmallow import class_registry,Schema
 
-from niyantra_rest_api.models.meta import Base
-from niyantra_rest_api.utils import to_camel_case,to_snake_case,change_dict_keys
-from niyantra_rest_api import constants
-from niyantra_rest_api.constants import Permissions
+from app.models.meta import Base
+from app.utils import to_camel_case,to_snake_case,change_dict_keys
+from app import constants
+from app.constants import Permissions
 
 def custom_deriver(view,info):
     schema = info.options.get('schema')

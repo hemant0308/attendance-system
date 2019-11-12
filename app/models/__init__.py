@@ -64,7 +64,7 @@ def includeme(config):
     """
     Initialize the model for a Pyramid app.
 
-    Activate this setup using ``config.include('niyantra_rest_api.models')``.
+    Activate this setup using ``config.include('app.models')``.
 
     """
     settings = config.get_settings()

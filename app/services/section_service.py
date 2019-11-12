@@ -1,7 +1,7 @@
 
 from .base_service import BaseService
-from niyantra_rest_api.models import Section, SectionSession, Student
-from niyantra_rest_api.exceptions import ConstraintError
+from app.models import Section, SectionSession, Student
+from app.exceptions import ConstraintError
 
 
 class SectionService(BaseService):

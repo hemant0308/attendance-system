@@ -2,9 +2,9 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 from .base_service import BaseService
 from .user_service import UserService
-from niyantra_rest_api.models import Teacher,SectionSession,TeacherSession
-from niyantra_rest_api.exceptions import DuplicateEntry
-from niyantra_rest_api import constants
+from app.models import Teacher,SectionSession,TeacherSession
+from app.exceptions import DuplicateEntry
+from app import constants
 
 user_service = UserService()
 

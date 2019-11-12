@@ -1,12 +1,12 @@
 from pyramid.view import view_config, view_defaults
 
-from niyantra_rest_api.services import BaseService
-from niyantra_rest_api.schemas import StudentSchema, SectionSchema
-from niyantra_rest_api.models import Student
-from niyantra_rest_api import constants
-from niyantra_rest_api.utils import set_empty_response
-from niyantra_rest_api.exceptions import ResourceNotFound
-from niyantra_rest_api.constants import Permissions
+from app.services import BaseService
+from app.schemas import StudentSchema, SectionSchema
+from app.models import Student
+from app import constants
+from app.utils import set_empty_response
+from app.exceptions import ResourceNotFound
+from app.constants import Permissions
 
 student_service = BaseService(Student)
 student_schema = StudentSchema()

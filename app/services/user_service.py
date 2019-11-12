@@ -1,9 +1,9 @@
 from sqlalchemy.orm.exc import NoResultFound
 
-from niyantra_rest_api.services import BaseService
-from niyantra_rest_api.models import LoginUser, Role
-from niyantra_rest_api.utils import hash_password
-from niyantra_rest_api.exceptions import DuplicateEntry, CustomException
+from app.services import BaseService
+from app.models import LoginUser, Role
+from app.utils import hash_password
+from app.exceptions import DuplicateEntry, CustomException
 
 class UserService(BaseService):
     def __init__(self):

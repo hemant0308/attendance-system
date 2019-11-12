@@ -1,6 +1,6 @@
 from marshmallow import fields,Schema,post_load
 
-from niyantra_rest_api.models import Student
+from app.models import Student
 from .session import SectionSchema
 
 class StudentSchema(Schema):

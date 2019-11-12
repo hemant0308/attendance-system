@@ -1,5 +1,5 @@
 from marshmallow import Schema,fields,post_load
-from niyantra_rest_api.models import LoginUser,Role
+from app.models import LoginUser,Role
 
 class LoginSchema(Schema):
     username = fields.String(required=True)

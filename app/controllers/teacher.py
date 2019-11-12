@@ -1,11 +1,11 @@
 from pyramid.view import view_config
 
-from niyantra_rest_api.services import TeacherService
-from niyantra_rest_api.models import Teacher
-from niyantra_rest_api.schemas import TeacherSchema, TeacherSessionSchema
-from niyantra_rest_api import constants
-from niyantra_rest_api.utils import set_empty_response
-from niyantra_rest_api.constants import Permissions
+from app.services import TeacherService
+from app.models import Teacher
+from app.schemas import TeacherSchema, TeacherSessionSchema
+from app import constants
+from app.utils import set_empty_response
+from app.constants import Permissions
 
 teacher_service = TeacherService()
 

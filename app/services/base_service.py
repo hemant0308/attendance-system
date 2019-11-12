@@ -2,9 +2,9 @@ from datetime import datetime
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from niyantra_rest_api.exceptions import ResourceNotFound
-from niyantra_rest_api.models import Trackable
-from niyantra_rest_api.utils import get_user_id
+from app.exceptions import ResourceNotFound
+from app.models import Trackable
+from app.utils import get_user_id
 
 class BaseService(object):
     def __init__(self,model_class):

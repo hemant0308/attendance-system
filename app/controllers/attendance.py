@@ -1,12 +1,12 @@
 from pyramid.view import view_config,view_defaults
 
-from niyantra_rest_api.services import BaseService, AttendanceService
-from niyantra_rest_api.schemas import AttendanceSchema,StudentSchema,AttendanceSheetSchema
-from niyantra_rest_api.models import Section
-from niyantra_rest_api import constants
-from niyantra_rest_api.exceptions import ResourceNotFound
-from niyantra_rest_api.utils import set_empty_response
-from niyantra_rest_api.constants import Permissions
+from app.services import BaseService, AttendanceService
+from app.schemas import AttendanceSchema,StudentSchema,AttendanceSheetSchema
+from app.models import Section
+from app import constants
+from app.exceptions import ResourceNotFound
+from app.utils import set_empty_response
+from app.constants import Permissions
 
 attendance_service = AttendanceService()
 attendance_sheet_schema = AttendanceSheetSchema()

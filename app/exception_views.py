@@ -4,7 +4,7 @@ from marshmallow import ValidationError
 from pyramid.view import exception_view_config
 from pyramid.httpexceptions import HTTPForbidden
 
-from niyantra_rest_api.exceptions import (
+from app.exceptions import (
     ResourceNotFound,
     InvalidCredentials,
     ConstraintError,

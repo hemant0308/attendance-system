@@ -1,9 +1,9 @@
 from pyramid.view import view_config, view_defaults
 
-from niyantra_rest_api.services import SectionService
-from niyantra_rest_api.models import Section
-from niyantra_rest_api.schemas import SectionSchema, SectionSessionSchema, StudentSchema
-from niyantra_rest_api.constants import Permissions
+from app.services import SectionService
+from app.models import Section
+from app.schemas import SectionSchema, SectionSessionSchema, StudentSchema
+from app.constants import Permissions
 
 section_service = SectionService()
 

@@ -1,5 +1,5 @@
 from .base_service import BaseService
-from niyantra_rest_api.models import Student
+from app.models import Student
 
 class StudentService(BaseService):
     def __init__(self):

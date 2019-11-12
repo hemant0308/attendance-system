@@ -2,11 +2,11 @@ from datetime import datetime
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from niyantra_rest_api.services.base_service import BaseService
-from niyantra_rest_api.services.teacher_service import TeacherService
-from niyantra_rest_api.models import Attendance,Section,AttendanceSheet,SectionSession,Student, AttendanceSheetStatus
-from niyantra_rest_api.exceptions import ConstraintError, AttendanceSubmitted, UnAuthorized, DuplicateEntry
-from niyantra_rest_api.utils import get_user_id
+from app.services.base_service import BaseService
+from app.services.teacher_service import TeacherService
+from app.models import Attendance,Section,AttendanceSheet,SectionSession,Student, AttendanceSheetStatus
+from app.exceptions import ConstraintError, AttendanceSubmitted, UnAuthorized, DuplicateEntry
+from app.utils import get_user_id
 
 from sqlalchemy.orm import joinedload
 

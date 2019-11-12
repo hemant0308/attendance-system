@@ -1,7 +1,7 @@
 from marshmallow import fields,Schema,post_load
 from marshmallow_enum import EnumField
 
-from niyantra_rest_api.models import Teacher, TeacherSession
+from app.models import Teacher, TeacherSession
 from .user import UserSchema
 from .session import SectionSchema,SectionSessionSchema
 

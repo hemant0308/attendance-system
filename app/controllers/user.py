@@ -1,11 +1,11 @@
 from pyramid.view import view_config, view_defaults
 
-from niyantra_rest_api.models import LoginUser, Role
-from niyantra_rest_api.schemas import UserSchema,LoginSchema
-from niyantra_rest_api.services import UserService
-from niyantra_rest_api.exceptions import ResourceNotFound, InvalidCredentials, CustomException
-from niyantra_rest_api.utils import check_password, hash_password
-from niyantra_rest_api.constants import Permissions
+from app.models import LoginUser, Role
+from app.schemas import UserSchema,LoginSchema
+from app.services import UserService
+from app.exceptions import ResourceNotFound, InvalidCredentials, CustomException
+from app.utils import check_password, hash_password
+from app.constants import Permissions
 
 user_service = UserService()
 user_schema = UserSchema()

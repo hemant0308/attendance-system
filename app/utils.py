@@ -1,4 +1,4 @@
-from niyantra_rest_api import constants
+from app import constants
 import bcrypt
 
 def hash_password(pw):
