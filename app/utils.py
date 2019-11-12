@@ -1,5 +1,8 @@
-from app import constants
+import os
 import bcrypt
+from app import constants
+from dotenv import load_dotenv
+
 
 def hash_password(pw):
     pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
@@ -40,3 +43,9 @@ def set_empty_response(request):
 
 def get_user_id(request):
     return 1 #self.request.authenticated_userid
+
+def expandvars_dict(settings):
+    load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
+    """Expands all environment variables in a settings dictionary."""
+    return dict((key, os.path.expandvars(value)) for
+                key, value in settings.items())

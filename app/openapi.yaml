@@ -3,7 +3,9 @@ openapi: "3.0.0"
 info:
   version: "1.0.0"
   title: A simple Todo app API
-
+servers:
+  - url: /v1
+  
 security:
   - BearerAuth: [admin]
 

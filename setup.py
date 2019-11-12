@@ -26,7 +26,8 @@ requires = [
     'marshmallow',
     'marshmallow_enum',
     'pyramid_jwt',
-    'pyramid_openapi3'
+    'pyramid_openapi3',
+    'python-dotenv'
 ]
 
 tests_require = [
