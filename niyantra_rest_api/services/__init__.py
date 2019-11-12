@@ -1,3 +1,5 @@
 from niyantra_rest_api.services.base_service import BaseService
 from niyantra_rest_api.services.attendance_service import AttendanceService
 from niyantra_rest_api.services.section_service import SectionService
+from niyantra_rest_api.services.teacher_service import TeacherService
+from niyantra_rest_api.services.user_service import UserService

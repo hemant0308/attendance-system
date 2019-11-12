@@ -1,7 +1,13 @@
-from marshmallow import class_registry,Schema
 import json
+
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.security import Allow, Authenticated, Everyone, ALL_PERMISSIONS, DENY_ALL,Deny
+from marshmallow import class_registry,Schema
+
 from niyantra_rest_api.models.meta import Base
 from niyantra_rest_api.utils import to_camel_case,to_snake_case,change_dict_keys
+from niyantra_rest_api import constants
+from niyantra_rest_api.constants import Permissions
 
 def custom_deriver(view,info):
     schema = info.options.get('schema')
@@ -24,6 +30,10 @@ def validated(request):
             change_dict_keys(json_body, to_snake_case)
         return schema().load(json_body)
 
+def is_admin(request):
+    roles = request.jwt_claims.get('roles',[])
+    return True if constants.Roles.Admin in roles else False
+
 class CustomRenderer(object):
     def __init__(self, info):
         pass
@@ -41,7 +51,6 @@ class CustomRenderer(object):
                 instance = value[0]
             else:
                 instance = None
-
         if response_schema is not None and isinstance(instance, (Schema, Base)):
             if isinstance(response_schema,str):
                 response_schema = class_registry.get_class(request.response_schema)
@@ -51,7 +60,24 @@ class CustomRenderer(object):
         else:
             return json.dumps(value)
 
+class RootFactory:
+    __acl__ = [
+        (Allow, Everyone, Permissions.every_one),
+        (Allow, Authenticated, Permissions.authenticated_only),
+        (Allow, constants.Roles.Admin, ALL_PERMISSIONS),
+        DENY_ALL
+    ]
+    def __init__(self,request):
+        pass
+
+def get_principals(userid, request):
+    return [role for role in request.jwt_claims.get('roles',[])]
+
 def includeme(config):
     config.add_view_deriver(custom_deriver)
     config.add_request_method(validated,'validated',reify=True)
+    config.add_request_method(is_admin, 'is_admin', reify=True)
     config.add_renderer(None, CustomRenderer)
+    config.set_jwt_authentication_policy(callback=get_principals)
+    config.set_authorization_policy(ACLAuthorizationPolicy())
+    config.set_root_factory(RootFactory)

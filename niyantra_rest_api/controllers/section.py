@@ -1,32 +1,40 @@
-from pyramid.view import view_config
+from pyramid.view import view_config, view_defaults
 
 from niyantra_rest_api.services import SectionService
 from niyantra_rest_api.models import Section
-from niyantra_rest_api.schemas import SectionSchema, SectionSessionSchema
-from niyantra_rest_api import constants
+from niyantra_rest_api.schemas import SectionSchema, SectionSessionSchema, StudentSchema
+from niyantra_rest_api.constants import Permissions
 
 section_service = SectionService()
 
-@view_config(route_name='section', request_method='GET',response_schema=SectionSchema)
-def all(request):
-    section_service.set_request(request)
-    return section_service.all()
+@view_defaults(permission=Permissions.authenticated_only)
+class SectionController():
+    def __init__(self, request):
+        self.request = request
+        section_service.set_request(request)
 
-@view_config(route_name='section', request_method='POST', schema=SectionSchema,response_schema=SectionSchema)
-def create(request):
-    session = request.validated
-    section_service.set_request(request)
-    return section_service.create(session)
+    @view_config(route_name='section', request_method='GET',response_schema=SectionSchema)
+    def all(self):
+        return section_service.all()
 
-@view_config(route_name='section_session', request_method='POST', schema=SectionSessionSchema,response_schema=SectionSessionSchema)
-def add_session(request):
-    session = request.validated
-    section_service.set_request(request)
-    section_id = request.matchdict['section_id']
-    return section_service.add_session(section_id, session)
+    @view_config(route_name='section', request_method='POST', schema=SectionSchema, permission=Permissions.admin_only, response_schema=SectionSchema)
+    def create(self):
+        session = self.request.validated
+        return section_service.create(session)
 
-@view_config(route_name='section_session', request_method='GET',response_schema=SectionSessionSchema)
-def get_sessions(request):
-    section_service.set_request(request)
-    section_id = request.matchdict['section_id']
-    return section_service.get_sessions(section_id)
+    @view_config(route_name='section_session', request_method='POST',permission=Permissions.admin_only, schema=SectionSessionSchema,response_schema=SectionSessionSchema)
+    def add_session(self):
+        session = self.request.validated
+        section_id = self.request.matchdict['section_id']
+        return section_service.add_session(section_id, session)
+
+    @view_config(route_name='section_session', request_method='GET',response_schema=SectionSessionSchema)
+    def get_sessions(self):
+        section_id = self.request.matchdict['section_id']
+        return section_service.get_sessions(section_id)
+
+    @view_config(route_name='section_student', request_method='GET',response_schema=StudentSchema)
+    def get_students(self):
+        section_id = int(self.request.matchdict['section_id'])
+        return section_service.get_students(section_id)
+

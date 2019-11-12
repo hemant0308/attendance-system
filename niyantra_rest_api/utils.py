@@ -1,3 +1,14 @@
+from niyantra_rest_api import constants
+import bcrypt
+
+def hash_password(pw):
+    pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
+    return pwhash.decode('utf8')
+
+def check_password(pw, hashed_pw):
+    expected_hash = hashed_pw.encode('utf8')
+    return bcrypt.checkpw(pw.encode('utf8'), expected_hash)
+    
 def to_camel_case(kebab_case):
     if kebab_case is not None:
         words = kebab_case.split("_")
@@ -23,3 +34,9 @@ def change_dict_keys(input_dict, method):
             change_dict_keys(el, method)
     else:
         return
+def set_empty_response(request):
+    request.response.status_code = 204
+    return constants.EMPTY_STRING
+
+def get_user_id(request):
+    return 1 #self.request.authenticated_userid

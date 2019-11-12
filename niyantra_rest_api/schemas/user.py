@@ -1,17 +1,15 @@
 from marshmallow import Schema,fields,post_load
+from niyantra_rest_api.models import LoginUser,Role
 
 class LoginSchema(Schema):
-    username = fields.String(require=True)
-    password = fields.String(require=True)
+    username = fields.String(required=True)
+    password = fields.String(required=True)
     remember_me = fields.Boolean()
 
 class UserSchema(Schema):
-    username = fields.String()
-    fullname = fields.String()
-    password = fields.String(load_only=True)
+    username = fields.String(required=True)
+    fullname = fields.String(required=True)
+    password = fields.String(load_only=True, required=True)
+    roles = fields.List(fields.String, required=True, many=True, load_only=True)
     email = fields.Email()
-
-class UserTokenSchema(Schema):
-    user = fields.Nested(UserSchema)
-    token = fields.String(dump_only=True)
-
+    id = fields.Int(dump_only=True)

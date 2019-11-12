@@ -2,8 +2,9 @@ from datetime import datetime
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from niyantra_rest_api.exceptions import NoResourceFound
+from niyantra_rest_api.exceptions import ResourceNotFound
 from niyantra_rest_api.models import Trackable
+from niyantra_rest_api.utils import get_user_id
 
 class BaseService(object):
     def __init__(self,model_class):
@@ -16,7 +17,7 @@ class BaseService(object):
 
     def create(self,model):
         if isinstance(model, Trackable):
-            model.created_by = 1 #self.request.authenticated_userid 
+            model.created_by = get_user_id(self.request)
             model.created_at = datetime.now()
         self.dbsession.add(model)
         self.flush()
@@ -26,11 +27,13 @@ class BaseService(object):
         _model = self.get(id,**kwargs)
         model.id = id
         if(isinstance(model, Trackable)):
-            model.updated_by = 1 #self.request.authenticated_userid
+            model.updated_by = get_user_id(self.request)
             model.updated_at = datetime.now()
-            print('Trackable')
         self.dbsession.merge(model)
         return model
+
+    def save(self, model):
+        self.dbsession.add(model)
 
     def get(self,id,**kwargs):
         model_class = self.model_class
@@ -46,6 +49,9 @@ class BaseService(object):
 
     def delete(self, id):
         model = self.get(id)
-        self.dbsession.delete(model)
-        self.flush()
+        if model is not None:
+            self.dbsession.delete(model)
+            self.flush()
+        else:
+            raise ResourceNotFound()
 

@@ -10,8 +10,12 @@ from .role import Role
 from .student import Student
 from .attendance import Attendance, AttendanceStatus
 from .attendance_sheet import AttendanceSheet
+from .attendance_sheet import AttendanceSheetStatus
 from .section import Section
 from .section_session import SectionSession
+from .teacher import Teacher
+from .teacher_session import TeacherSession
+from .section_session import WeekDay
 from .trackable_base import Trackable
 
 # run configure_mappers after defining all of the models to ensure

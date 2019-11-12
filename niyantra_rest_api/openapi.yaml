@@ -1,0 +1,413 @@
+openapi: "3.0.0"
+
+info:
+  version: "1.0.0"
+  title: A simple Todo app API
+
+security:
+  - BearerAuth: [admin]
+
+paths:
+  /login:
+    post:
+      security: []
+      summary: User login
+      description: Logging user to system.It will respond with authentication token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginSchema'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+
+  /user:
+    post:
+      summary: Create User
+      description: Creates a new user [Admin operation].
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginSchema'
+      responses:
+        '200':
+          description: Successfully created new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+        '409':
+          $ref: '#/components/responses/BadRequestResponse'
+  /user/{userId}:
+    get:
+      summary: Get User
+      description: Get user details [Admin operation].
+      parameters:
+        - in: path
+          name: userId
+          schema: 
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Details of user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+
+  /student:
+    get:
+      summary: Get students
+      description: Get all students  [Admin operation]
+      responses:
+        '200':
+          description: All students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentSchema'
+    post:
+      summary: Create student
+      description: create a new student [Admin operation].
+      requestBody:
+        required: true
+        description: student payload
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentSchema'
+      responses:
+        '200':
+          description: student created
+        '400':
+           $ref: '#/components/responses/BadRequestResponse'
+  /student/{studentId}:
+    get:
+      summary: Get student
+      description: Get student details.
+      parameters:
+        - in: path
+          name: studentId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: student details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentSchema'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+    delete:
+      summary: delete student
+      description: delete student with given studentId.
+      parameters:
+        - in: path
+          name: studentId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+    put:
+      summary: Update student
+      description: update student details.
+      parameters:
+        - in: path
+          name: studentId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: updated student details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentSchema'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+
+  /section:
+    get:
+      summary: Get sections
+      description: Get all sections details.
+      responses:
+        '200':
+          description: all sections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SectionSchema'
+    post:
+      summary: Create section
+      description: Create a new section.
+      requestBody:
+        required: true
+        description: section object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectionSchema'
+      responses:
+        '200':
+          description: section created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionSchema'
+  /section/{sectionId}/sessions:
+    get:
+      summary: Get section sessions
+      description: Get sessions belongs to given section.
+      parameters:
+        - in: path
+          name: sectionId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: list of sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionSchema'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+    post:
+      summary: Add section session
+      description: Add session to given section.
+      parameters:
+        - in: path
+          name: sectionId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        description: session object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionSchema'
+      responses:
+        '200':
+          description: New session added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionSchema'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+  /section/{sectionId}/students:
+    get:
+      summary: Get section students
+      description: Get students belongs to the section.
+      parameters:
+        - in: path
+          name: sectionId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: list of students.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentSchema'
+  /attendance-sheet:
+    get:
+      summary: Get attendance sheets
+      description: Get all attendance-sheets.
+      responses:
+        '200':
+          description: list of attendance sheets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AttendanceSheetSchema'
+    post:
+      summary: Create attendance sheet
+      description: Create new attendance sheet.
+      requestBody:
+        required: true
+        description: attendance sheet object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceSheetSchema'
+      responses:
+        '200':
+          description: Attendance sheet created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceSheetSchema'
+
+  /attendance-sheet/{attendanceSheetId}/attendance:
+    get:
+      summary: Get attendances
+      description: Get attendances of a sheet
+      parameters:
+        - in: path
+          name: attendanceSheetId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: list of attendances with sheet details.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AttendanceShema'
+    post:
+      summary: Mark attendance
+      description: Mark attendance to student
+      parameters:
+        - in: path
+          name: attendanceSheetId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        description: attendance object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceShema'
+      responses:
+        '200':
+          description: Attendance marked for given student
+  /attendance-sheet/{attendanceSheetId}/submit:
+    post:
+      summary: Submit attendance sheet.
+      description: Submitting a attendance sheet after marking all the attendnace.All the write operations will be freezen after submitting.
+      parameters:
+        - in: path
+          name: attendanceSheetId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Attendaces submitted successfully
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      flows: 
+        authorizationCode:
+          scopes:
+            teacher: Grants access to teacher operations
+            admin: Grants access to admin operations
+  schemas:
+    LoginSchema:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    UserSchema:
+      type: object
+      properties:
+        username:
+          type: string
+        fullname: 
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+    StudentSchema:
+      type: object
+      properties:
+        sectionId:
+          type: integer
+        firstname:
+          type: string
+        lastname:
+          type: string
+    SectionSchema:
+      type: object
+      properties:
+        name:
+          type: string
+    SessionSchema:
+      type: object
+      properties:
+        start:
+          type: string
+        end:
+          type: string
+        dayOfWeek:
+          type: string
+    AttendanceSheetSchema:
+      type: object
+      properties:
+        date:
+          type: string
+        sessionId:
+          type: string
+    AttendanceShema:
+      type: object
+      properties:
+        studentId:
+          type: integer
+        status:
+          type: string
+
+
+  responses:
+    BadRequestResponse:
+      description: Invalid data 
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFoundResponse:
+      description: Requested resource not found 
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string

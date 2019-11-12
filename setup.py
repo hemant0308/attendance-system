@@ -25,7 +25,8 @@ requires = [
     'mysqlclient',
     'marshmallow',
     'marshmallow_enum',
-    'pyramid_jwt'
+    'pyramid_jwt',
+    'pyramid_openapi3'
 ]
 
 tests_require = [

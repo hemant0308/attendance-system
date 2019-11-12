@@ -1,6 +1,6 @@
 
 from .base_service import BaseService
-from niyantra_rest_api.models import Section, SectionSession
+from niyantra_rest_api.models import Section, SectionSession, Student
 from niyantra_rest_api.exceptions import ConstraintError
 
 
@@ -18,3 +18,6 @@ class SectionService(BaseService):
     def get_sessions(self, section_id):
         return self.dbsession.query(SectionSession).filter(
             SectionSession.section_id == section_id).all()
+
+    def get_students(self, section_id):
+        return self.dbsession.query(Student).filter_by(section_id = section_id).all()

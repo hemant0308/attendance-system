@@ -1,40 +1,53 @@
-from pyramid.view import view_config
+from pyramid.view import view_config, view_defaults
 
 from niyantra_rest_api.services import BaseService
-from niyantra_rest_api.schemas import StudentSchema
+from niyantra_rest_api.schemas import StudentSchema, SectionSchema
 from niyantra_rest_api.models import Student
 from niyantra_rest_api import constants
+from niyantra_rest_api.utils import set_empty_response
+from niyantra_rest_api.exceptions import ResourceNotFound
+from niyantra_rest_api.constants import Permissions
 
 student_service = BaseService(Student)
+student_schema = StudentSchema()
+section_schema = SectionSchema()
 
-@view_config(route_name='student', request_method='GET',response_schema=StudentSchema)
-def get_students(request):
-    student_service.set_request(request)
-    students = student_service.all()
-    return students
+@view_defaults(permission=Permissions.authenticated_only)
+class StudentController():
+    def __init__(self, request):
+        self.request = request
+        student_service.set_request(request)
 
-@view_config(route_name='student', request_method='POST', schema=StudentSchema,response_schema=StudentSchema)
-def create_student(request):
-    student = request.validated
-    student_service.set_request(request)
-    return student_service.create(student)
+    @view_config(route_name='student', request_method='GET')
+    def get_students(self):
+        _students = student_service.all()
+        students = []
+        for _student in _students:
+            student = student_schema.dump(_student)
+            student['section'] = section_schema.dump(_student.section)
+            students.append(student)
+        return students
 
-@view_config(route_name='student_param', request_method='GET', response_schema=StudentSchema)
-def get_student(request):
-    student_service.set_request(request)
-    return student_service.get(int(request.matchdict['id']))
+    @view_config(route_name='student', request_method='POST', schema=StudentSchema,response_schema=StudentSchema)
+    def create_student(self):
+        student = self.request.validated
+        return student_service.create(student)
 
+    @view_config(route_name='student_param', request_method='GET')
+    def get_student(self):
+        student = student_service.get(int(self.request.matchdict['student_id']))
+        if student is None:
+            raise ResourceNotFound
+        student_dict = student_schema.dump(student)
+        student_dict['section'] = section_schema.dump(student.section)
+        return student_dict
 
-@view_config(route_name='student_param', request_method='PUT', response_schema=StudentSchema)
-def get_student(request):
-    student = request.validated
-    student_service.set_request(request)
-    return student_service.get(int(request.matchdict['id']),student)
+    @view_config(route_name='student_param', schema=StudentSchema, request_method='PUT', response_schema=StudentSchema)
+    def update_student(self):
+        student = self.request.validated
+        return student_service.update(int(self.request.matchdict['student_id']), student)
 
-
-@view_config(route_name='student_param', request_method='DELETE', response_schema=StudentSchema)
-def get_student(request):
-    student_service.set_request(request)
-    student_service.delete(int(request.matchdict['id']))
-    request.response.status_code = 204
-    return constants.EMPTY_STRING
+    @view_config(route_name='student_param', request_method='DELETE', response_schema=StudentSchema)
+    def delete_student(self):
+        student_service.delete(int(self.request.matchdict['student_id']))
+        return set_empty_response(self.request)
