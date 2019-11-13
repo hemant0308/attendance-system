@@ -14,6 +14,8 @@ from .attendance_sheet import AttendanceSheetStatus
 from .section import Section
 from .section_session import SectionSession
 from .teacher import Teacher
+from .school import School
+from .school_user import SchoolUser
 from .teacher_session import TeacherSession
 from .section_session import WeekDay
 from .trackable_base import Trackable

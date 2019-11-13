@@ -17,29 +17,33 @@ class AttendanceService(BaseService):
         super(AttendanceService,self).__init__(AttendanceSheet)
 
     def all(self):
-        return self.dbsession.query(AttendanceSheet).options(
-            joinedload(AttendanceSheet.section_session)).all()
+        return self.dbsession.query(AttendanceSheet).join(AttendanceSheet.section_session).join(SectionSession.section).filter(Section.school_id==self.request.school_id).all()
 
     def get(self, id):
         try:
             return self.dbsession.query(AttendanceSheet).options(
-                joinedload(AttendanceSheet.section_session)).options(
                 joinedload(AttendanceSheet.attendances).
-                joinedload(Attendance.student)).filter(AttendanceSheet.id == id).one()
+                joinedload(Attendance.student)).join(AttendanceSheet.section_session).join(SectionSession.session).filter_by(id == id, Section.school_id == self.request.school_id).one()
         except NoResultFound:
             return None
 
+    def _check_current_school(self, attendance_sheet):
+        session = super().get(attendance_sheet.section_session_id, model_class=SectionSession)
+        section = session.section
+        if self.request.school_id != section.school_id:
+            raise UnAuthorized('Not authorized')
+
     def create(self, attendance_sheet):
-        session = attendance_sheet.section_session
+        self._check_current_school(attendance_sheet)
         if not self.request.is_admin:
             teacher = teacher_service.get_current_teacher()
             try:
                 self.dbsession.query(TeacherSession).filter_by(teacher_id = teacher.id,section_session_id=session.id).one()
             except NoResultFound:
-                raise UnAuthorized('You are not authorized')
+                raise UnAuthorized('You dont have access to create attendance sheet to given session')
         try:
             self.dbsession.query(AttendanceSheet).filter_by(date=attendance_sheet.date,section_session_id=attendance_sheet.section_session_id).one()
-            raise DuplicateEntry('Attendance sheet is already created for this session on this date')
+            raise DuplicateEntry(f"Attendance sheet is already created for given session on {attendance_sheet.date}")
         except NoResultFound:
             return super().create(attendance_sheet)
 
@@ -47,22 +51,24 @@ class AttendanceService(BaseService):
     def mark_attendance(self,attendance_sheet_id,attendance):
         attendance_sheet = self.get(attendance_sheet_id)
 
+        self._check_current_school(attendance_sheet)
+
         if not self.request.is_admin and attendance_sheet.created_by != self.request.authenticated_userid:
-            raise UnAuthorized('You are not authorized to edit this sheet')
+            raise UnAuthorized('You dont have access to edit given attendance sheet.')
 
         if attendance_sheet.status == AttendanceSheetStatus.SUBMITTED:
-            raise AttendanceSubmitted('Submitted attendance cannot be edited')
+            raise AttendanceSubmitted('Submitted attendance cannot be edited.')
 
         if attendance_sheet is None:
-            raise ConstraintError('No Attendance sheet found with this Id')
+            raise ConstraintError('No Attendance sheet found with given Id.')
 
         student = super().get(attendance.student_id,model_class=Student)
 
         if student is None:
-            raise ConstraintError('No student found with this Id')
+            raise ConstraintError('No student found with given studentId.')
 
         if student.section_id != attendance_sheet.section_session.section_id:
-            raise ConstraintError('This student is not belongs to this session')
+            raise ConstraintError('Given studentId is not belongs to given attendance sheets session.')
 
         try:
             _attendance = self.dbsession.query(Attendance).filter_by(
@@ -78,8 +84,11 @@ class AttendanceService(BaseService):
 
     def submit(self, attendance_sheet_id):
         attendance_sheet = self.get(attendance_sheet_id)
+
+        self._check_current_school(attendance_sheet)
+
         if attendance_sheet.status == AttendanceSheetStatus.SUBMITTED:
-            raise AttendanceSubmitted('Attendance Submitted Already')
+            raise AttendanceSubmitted('Attendance corresponding to given Id, Submitted Already.')
         attendance_sheet.status = AttendanceSheetStatus.SUBMITTED
         attendance_sheet.submitted_by = get_user_id(self.request)
         attendance_sheet.submitted_on = datetime.now()

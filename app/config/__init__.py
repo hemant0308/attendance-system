@@ -34,6 +34,9 @@ def is_admin(request):
     roles = request.jwt_claims.get('roles',[])
     return True if constants.Roles.Admin in roles else False
 
+def get_school_id(request):
+    return request.jwt_claims.get('school_id', None)
+
 class CustomRenderer(object):
     def __init__(self, info):
         pass
@@ -77,6 +80,7 @@ def includeme(config):
     config.add_view_deriver(custom_deriver)
     config.add_request_method(validated,'validated',reify=True)
     config.add_request_method(is_admin, 'is_admin', reify=True)
+    config.add_request_method(is_admin, 'school_id', reify=True)
     config.add_renderer(None, CustomRenderer)
     config.set_jwt_authentication_policy(callback=get_principals)
     config.set_authorization_policy(ACLAuthorizationPolicy())

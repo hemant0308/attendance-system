@@ -18,7 +18,7 @@ from .trackable_base import Trackable
 
 class AttendanceStatus(enum.Enum):
     PRESENT = 1
-    OBSENT = 2
+    ABSENT = 2
     LEAVE = 3
 
 class Attendance(Trackable):

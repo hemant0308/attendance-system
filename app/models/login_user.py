@@ -26,6 +26,7 @@ class LoginUser(Trackable):
     fullname = Column(String)
     email = Column(String)
     roles = relationship("Role", secondary=association_table)
+    school_user = relationship('SchoolUser', uselist=False)
 
 
 Index('login_user_idx_username', LoginUser.username, unique=True, mysql_length=25)

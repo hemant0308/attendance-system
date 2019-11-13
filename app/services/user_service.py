@@ -1,7 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from app.services import BaseService
-from app.models import LoginUser, Role
+from app.models import LoginUser, Role, School, SchoolUser
 from app.utils import hash_password
 from app.exceptions import DuplicateEntry, CustomException
 
@@ -22,6 +22,10 @@ class UserService(BaseService):
             return self.create(user)
         else:
             raise DuplicateEntry("Username already existed")
+
+    def create_school_user(self, school_id, user_id):
+        school_user = SchoolUser(school_id = school_id, user_id = user_id)
+        return super().create(school_user)
 
     def _get_user_object(self, user_dict):
         roles = user_dict['roles']

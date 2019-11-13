@@ -11,10 +11,10 @@ from sqlalchemy.orm import relationship
 
 from .meta import Base
 
-class Section(Base):
-    __tablename__ = 'section'
+class SchoolUser(Base):
+    __tablename__ = 'school_user'
     id = Column(Integer, primary_key=True)
-    name = Column(String,nullable=False)
     school_id = Column(Integer, ForeignKey('school.id'), nullable=False)
-    sessions = relationship('SectionSession', back_populates='section')
+    user_id = Column(Integer, ForeignKey('login_user.id'),nullable=False)
     school = relationship('School')
+    user = relationship('LoginUser')

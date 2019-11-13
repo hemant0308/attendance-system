@@ -35,7 +35,7 @@ class BaseService(object):
     def save(self, model):
         self.dbsession.add(model)
 
-    def get(self,id,**kwargs):
+    def get(self, id, **kwargs):
         model_class = self.model_class
         if 'model_class' in kwargs:
             model_class = kwargs['model_class']

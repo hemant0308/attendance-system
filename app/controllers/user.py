@@ -1,6 +1,6 @@
 from pyramid.view import view_config, view_defaults
 
-from app.models import LoginUser, Role
+from app.models import LoginUser, Role, School
 from app.schemas import UserSchema,LoginSchema
 from app.services import UserService
 from app.exceptions import ResourceNotFound, InvalidCredentials, CustomException
@@ -26,7 +26,12 @@ class UserController():
         if not is_valid:
             raise InvalidCredentials
         roles = [str(role.name) for role in user.roles]
-        token = self.request.create_jwt_token(user.id,roles=roles)
+        school_user = user.school_user
+        school_id = None
+        if school_user is not None:
+            school = school_user.school
+            school_id = school.id
+        token = self.request.create_jwt_token(user.id, roles=roles, school_id=school_id)
         return {'user':user_schema.dump(user),'token':token}
 
     @view_config(route_name='user', schema=UserSchema, response_schema=UserSchema, request_method='POST')
