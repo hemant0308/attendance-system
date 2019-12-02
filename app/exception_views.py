@@ -8,7 +8,6 @@ from app.exceptions import (
     ResourceNotFound,
     InvalidCredentials,
     ConstraintError,
-    AttendanceSubmitted,
     DuplicateEntry,
     CustomException,
     UnAuthorized
@@ -44,7 +43,6 @@ def constraint_error(exception, request):
         "message": str(exception)
     }
 
-@exception_view_config(AttendanceSubmitted, renderer='json')
 @exception_view_config(DuplicateEntry, renderer='json')
 def conflict_error(exception, request):
     request.response.status_code = 409

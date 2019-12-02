@@ -57,6 +57,7 @@ setup(
     extras_require={
         'testing': tests_require,
     },
+    setup_requires=['wheel'],
     install_requires=requires,
     entry_points={
         'paste.app_factory': [

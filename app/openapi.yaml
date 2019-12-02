@@ -5,7 +5,7 @@ info:
   title: A simple Todo app API
 servers:
   - url: /v1
-  
+
 security:
   - BearerAuth: [admin]
 
@@ -331,11 +331,6 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
-      flows: 
-        authorizationCode:
-          scopes:
-            teacher: Grants access to teacher operations
-            admin: Grants access to admin operations
   schemas:
     LoginSchema:
       type: object
@@ -392,6 +387,10 @@ components:
           type: integer
         status:
           type: string
+          enum:
+            - PRESENT
+            - ABSENT
+            - LEAVE
 
 
   responses:

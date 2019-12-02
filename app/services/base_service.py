@@ -54,4 +54,7 @@ class BaseService(object):
             self.flush()
         else:
             raise ResourceNotFound()
+    def has_access_to_school(self, school_id):
+        if self.request.school_id != school_id:
+            raise UnAuthorized('Not authorized')    
 

@@ -19,9 +19,9 @@ class SectionController():
 
     @view_config(route_name='section', request_method='POST', schema=SectionSchema, permission=Permissions.admin_only, response_schema=SectionSchema)
     def create(self):
-        session = self.request.validated
-        session.school_id = self.request.school_id
-        return section_service.create(session)
+        section = self.request.validated
+        section.school_id = self.request.school_id
+        return section_service.create(section)
 
     @view_config(route_name='section_session', request_method='POST',permission=Permissions.admin_only, schema=SectionSessionSchema,response_schema=SectionSessionSchema)
     def add_session(self):

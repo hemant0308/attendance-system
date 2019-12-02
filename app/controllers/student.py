@@ -1,6 +1,6 @@
 from pyramid.view import view_config, view_defaults
 
-from app.services import BaseService
+from app.services import StudentService
 from app.schemas import StudentSchema, SectionSchema
 from app.models import Student
 from app import constants
@@ -8,7 +8,8 @@ from app.utils import set_empty_response
 from app.exceptions import ResourceNotFound
 from app.constants import Permissions
 
-student_service = BaseService(Student)
+student_service = StudentService()
+
 student_schema = StudentSchema()
 section_schema = SectionSchema()
 

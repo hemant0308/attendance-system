@@ -14,10 +14,6 @@ class ConstraintError(CustomException):
     def __init__(self,message):
         super(ConstraintError,self).__init__(message)
 
-class AttendanceSubmitted(CustomException):
-    def __init__(self,message):
-        super(AttendanceSubmitted,self).__init__(message)
-
 class DuplicateEntry(CustomException):
     def __init__(self, message):
         super(DuplicateEntry, self).__init__(message)

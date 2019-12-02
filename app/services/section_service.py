@@ -8,10 +8,13 @@ class SectionService(BaseService):
     def __init__(self):
         super(SectionService,self).__init__(Section)
 
+    def all(self):
+        return self.dbsession.query(Section).filter(Section.school_id == self.request.school_id).all()
+
     def add_session(self, section_id ,session):
         section = self.get(section_id)
         if section is None:
-            raise ConstraintError("No Attendance group is found with this id")
+            raise ConstraintError("No section is found with this id")
         session.section = section
         return self.create(session)
 
